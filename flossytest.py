@@ -208,12 +208,11 @@ class MakeupResult(result.TestResult):
             if not self.buffer or (self.buffer and
                                    category in ['failure', 'error']):
                 if self.verbosity >= 2:
-                    errors = self.indent * 4 + errors
+                    errors = self.indent * 4 + errors.strip('\n')
                     errors = errors.replace('\n', '\n' + self.indent * 4)
                 elif self.verbosity == 1:
                     errors = '\r' + errors
-                self.stream.write(errors)
-                self.stream.flush()
+                self.stream.writeln(errors)
 
     def addSuccess(self, test):
         super(MakeupResult, self).addSuccess(test)
@@ -396,6 +395,7 @@ class MakeupRunner(object):
                     if doc and '\n' in doc:
                         first_line, rest = doc.split('\n', 1)
                         doc = first_line + '\n' + textwrap.dedent(rest)
+                        doc = doc.strip('\n')
                         doc = doc.split('\n\n')[0]
                     i.documentation = doc
 
@@ -471,8 +471,9 @@ class MakeupRunner(object):
 runner.TextTestResult = MakeupResult
 runner.TextTestRunner = MakeupRunner
 
-if __name__ == "__main__":
-    import sys
+
+def run():
+    global __unittest
 
     if sys.argv[0].endswith("__main__.py"):
         sys.argv[0] = "python -m unittest"
@@ -481,3 +482,6 @@ if __name__ == "__main__":
 
     TestProgram.USAGE = USAGE_AS_MAIN
     main(module=None)
+
+if __name__ == "__main__":
+    run()
