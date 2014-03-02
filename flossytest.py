@@ -1,3 +1,7 @@
+"""
+flosstest - colorful and clean output to python unittest.
+"""
+
 from __future__ import print_function
 
 import sys
@@ -25,7 +29,7 @@ CONFIG = {
         'unexpected': 'red'
     },
     'symbols': {
-        'start': ' ',
+        'start': '*',
         'success': '✓',
         'failure': '-',
         'error': '✗',
@@ -91,7 +95,6 @@ def cprint(text, color=None, on_color=None, attrs=None, **kwargs):
 
     It accepts arguments of print function.
     """
-
     print((colored(text, color, on_color, attrs)), **kwargs)
 
 
@@ -114,35 +117,51 @@ class MakeupResult(result.TestResult):
         self.last_test_class = ''
         self.indent = ' ' * CONFIG['indent']
 
-    def get_message(self, test, result, indent=CONFIG['indent']):
+    # Test result elements.
 
+    def get_message(self, test, category, indent=None):
+        """Returns a formatted result message.
+
+        Args:
+            category (str): Test result type: 'success', 'failure', 'error'...
+            indent (int): Message indentation, if None => auto indent.
+        """
+
+        # Test message is first line of docstring or method name.
         doc = test.shortDescription()
         if doc is None or not self.show_descriptions:
             doc = test._testMethodName
 
-        msg = CONFIG['format'].format(symbol=CONFIG['symbols'][result],
+        msg = CONFIG['format'].format(symbol=CONFIG['symbols'][category],
                                       msg=doc)
-        indent = ' ' * indent
-        msg = '\r' + indent * 2 + msg
 
-        if CONFIG['colors'][result]:
-            return colored(msg, CONFIG['colors'][result])
+        if indent is None:
+            msg = '\r' + self.indent * 2 + msg
+        else:
+            msg = '\r' + ' ' * indent + msg
+
+        if CONFIG['colors'][category]:
+            return colored(msg, CONFIG['colors'][category])
         return msg
+
+    def write_header(self, test, prefix=''):
+        """Writes a docstring header of given test class."""
+
+        if self.last_test_class != test.test_class:
+            # Use class docstring header or class name.
+            if test.documentation:
+                x = test.documentation.replace('\n', '\n' + self.indent)
+            else:
+                x = test.__class__.__name__
+            self.stream.write(prefix + self.indent + x + '\n')
+            self.last_test_class = test.test_class
 
     def startTest(self, test):
         super(MakeupResult, self).startTest(test)
 
         # Show all details.
         if self.verbosity >= 2:
-            if self.last_test_class != test.test_class:
-                if test.documentation:
-                    x = (textwrap.dedent(test.documentation))
-                    x = x.strip('\n').replace('\n', '\n' + self.indent)
-                else:
-                    x = test.__class__.__name__
-                self.stream.write(self.indent + x + '\n')
-                self.last_test_class = test.test_class
-
+            self.write_header(test)
             self.stream.write(self.get_message(test, 'start'))
             self.stream.flush()
 
@@ -160,11 +179,14 @@ class MakeupResult(result.TestResult):
             self.test_number += 1
             self.stream.flush()
 
+        # Catch stdout and stderr.
         Output.disable()
 
     # Tests results.
 
     def write_result(self, test, category, msg=None):
+        """Writes a test result to output. Argument msg is additional message
+        printed after test result"""
 
         Output.enable()
 
@@ -182,7 +204,7 @@ class MakeupResult(result.TestResult):
             self.stream.write(output)
 
         if errors:
-
+            # Show only errors and failures if buffer is on.
             if not self.buffer or (self.buffer and
                                    category in ['failure', 'error']):
                 if self.verbosity >= 2:
@@ -190,7 +212,6 @@ class MakeupResult(result.TestResult):
                     errors = errors.replace('\n', '\n' + self.indent * 4)
                 elif self.verbosity == 1:
                     errors = '\r' + errors
-
                 self.stream.write(errors)
                 self.stream.flush()
 
@@ -225,7 +246,6 @@ class MakeupResult(result.TestResult):
         if (self.errors or self.failures) and self.verbosity == 1:
             self.stream.writeln(colored('\rOops! Something went wrong! :(',
                                         'red'))
-
         # Errors.
         if self.errors:
             if len(self.errors) == 1:
@@ -263,18 +283,10 @@ class MakeupResult(result.TestResult):
             # Skip "Traceback" line.
             err = err[err.find('\n') + 1:]
 
-            if self.last_test_class != test.test_class:
-                if test.documentation:
-                    x = (textwrap.dedent(test.documentation))
-                    x = x.strip('\n').replace('\n', '\n' + self.indent)
-                else:
-                    x = test.__class__.__name__
-                self.stream.write('\n' + self.indent + x + '\n')
-                self.last_test_class = test.test_class
-
-            self.stream.writeln(self.get_message(test, flavour, indent=1))
+            self.write_header(test, prefix='\n')
+            self.stream.writeln(self.get_message(test, flavour,
+                                                 indent=CONFIG['indent']))
             err = err.rstrip('\n')
-
             msg = self.indent * 1 + str(err).replace('\n',
                                                      '\n' + self.indent * 2)
             self.stream.writeln(colored(msg))
@@ -309,21 +321,17 @@ class MakeupResult(result.TestResult):
             msg = '\n' + self.indent + msg + '\n'
         self.stream.writeln(msg)
 
+
 # Monkey patching standard python library.
 
 class Output:
-    # stout_write = sys.stdout.write
-    # sterr_write = sys.stderr.write
-    # output = ''
+    """Disable or enable stdout and stderr."""
 
     @classmethod
     def disable(cls):
-
         cls.stout_write = sys.stdout.write
         cls.sterr_write = sys.stderr.write
-        cls.output = ''
-        cls.error = ''
-
+        cls.output, cls.error = '', ''
         sys.stdout.write = cls.write_to_stdout
         sys.stderr.write = cls.write_to_sterr
 
@@ -332,16 +340,8 @@ class Output:
         sys.stdout.write = cls.stout_write
         sys.stderr.write = cls.sterr_write
 
-        # returned, cls.output = cls.output, ''
-
-        # stdout, stderr = cls.output, cls.error
-        # cls.output, cls.error = '', ''
-        #
-        # return stdout, stderr
-
     @classmethod
     def write_to_stdout(cls, data):
-
         cls.output += data
 
     @classmethod
@@ -350,27 +350,10 @@ class Output:
 
     @classmethod
     def get(cls):
+        """Returns cough output."""
         stdout, stderr = cls.output, cls.error
         cls.output, cls.error = '', ''
         return stdout, stderr
-
-
-
-class _WritelnDecorator(object):
-    """Used to decorate file-like objects with a handy 'writeln' method"""
-
-    def __init__(self, stream):
-        self.stream = stream
-
-    def __getattr__(self, attr):
-        if attr in ('stream', '__getstate__'):
-            raise AttributeError(attr)
-        return getattr(self.stream, attr)
-
-    def writeln(self, arg=None):
-        if arg:
-            self.write(arg)
-        self.write('\n')  # text-mode streams translate to \r\n if needed
 
 
 class MakeupRunner(object):
@@ -386,7 +369,7 @@ class MakeupRunner(object):
                  warnings=None):
         if stream is None:
             stream = sys.stderr
-        self.stream = _WritelnDecorator(stream)
+        self.stream = runner._WritelnDecorator(stream)
         self.descriptions = descriptions
         self.verbosity = verbosity
         self.failfast = failfast
@@ -399,6 +382,7 @@ class MakeupRunner(object):
         return self.resultclass(self.stream, self.descriptions, self.verbosity)
 
     def _check_suites(self, suite):
+        """Adds docstring of TestSuite to TestCases."""
 
         def _suites(suite):
             for i in suite:
@@ -406,13 +390,18 @@ class MakeupRunner(object):
                     _suites(i)
                 else:
                     i.test_class = i.__class__
-                    i.documentation = i.__class__.__doc__
+                    # Get class docstring, dedent it and remove everything
+                    # after empty new line.
+                    doc = i.__class__.__doc__
+                    if doc and '\n' in doc:
+                        first_line, rest = doc.split('\n', 1)
+                        doc = first_line + '\n' + textwrap.dedent(rest)
+                        doc = doc.split('\n\n')[0]
+                    i.documentation = doc
 
                     if _suites.last_class != i.__class__:
                         _suites.last_class = i.__class__
-
         _suites.last_class = ''
-
         _suites(suite)
 
     def run(self, test):
@@ -442,9 +431,10 @@ class MakeupRunner(object):
                 # noisy.  The -Wd and -Wa flags can be used to bypass this
                 # only when self.warnings is None.
                 if self.warnings in ['default', 'always']:
-                    warnings.filterwarnings('module',
-                                            category=DeprecationWarning,
-                                            message='Please use assert\w+ instead.')
+                    warnings.filterwarnings(
+                        'module',
+                        category=DeprecationWarning,
+                        message='Please use assert\w+ instead.')
 
             startTime = time.time()
             startTestRun = getattr(result, 'startTestRun', None)
@@ -477,12 +467,9 @@ class MakeupRunner(object):
 
         return result
 
-
+# Monkey patch unittest classes.
 runner.TextTestResult = MakeupResult
 runner.TextTestRunner = MakeupRunner
-
-
-
 
 if __name__ == "__main__":
     import sys
