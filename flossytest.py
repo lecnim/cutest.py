@@ -254,6 +254,8 @@ class MakeupResult(result.TestResult):
 
     def printErrorList(self, flavour, errors):
 
+        self.last_test_class = ''
+
         x = '✗' if flavour == 'error' else '-'
 
         for test, err in errors:
