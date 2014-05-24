@@ -241,10 +241,10 @@ class MakeupResult(result.TestResult):
     # Summary.
 
     def printErrors(self):
-
         if (self.errors or self.failures) and self.verbosity == 1:
             self.stream.writeln(colored('\rOops! Something went wrong! :(',
                                         'red'))
+
         # Errors.
         if self.errors:
             if len(self.errors) == 1:
@@ -253,7 +253,7 @@ class MakeupResult(result.TestResult):
                 msg = "\n{} errors occurred:".format(len(self.errors))
 
             self.stream.writeln(colored(msg, attrs=['bold']))
-        self.printErrorList('error', self.errors)
+            self.printErrorList('error', self.errors)
 
         # Failures.
         # We do not want to modify original failures list, because maybe it
@@ -269,7 +269,7 @@ class MakeupResult(result.TestResult):
             else:
                 msg = "\n{} tests failed:".format(len(failures))
             self.stream.writeln(colored(msg, attrs=['bold']))
-        self.printErrorList('failure', failures)
+            self.printErrorList('failure', failures)
 
     def printErrorList(self, flavour, errors):
 
@@ -292,15 +292,16 @@ class MakeupResult(result.TestResult):
 
     def printSummary(self, details):
 
-        self.stream.writeln('')
-
         if self.verbosity >= 2:
+            self.stream.writeln('')
             msg = 'Summary:'
             self.stream.writeln(colored(msg, attrs=['bold']))
         else:
             self.stream.write('\r')
 
         if not details['success']:
+            if self.verbosity == 1:
+                self.stream.writeln('')
             msg = colored('FAIL', 'red')
         else:
             msg = colored('OK', 'green')
@@ -410,7 +411,7 @@ class MakeupRunner(object):
         self.resultclass.number_of_tests = test.countTestCases()
 
         if self.verbosity >= 2:
-            self.stream.writeln(colored('Testing:\n', attrs=['bold']))
+            self.stream.writeln(colored('\nTesting:\n', attrs=['bold']))
         else:
             self.stream.writeln('Testing...')
 
@@ -478,9 +479,14 @@ def run():
     if sys.argv[0].endswith("__main__.py"):
         sys.argv[0] = "python -m unittest"
     __unittest = True
-    from unittest.main import main, TestProgram, USAGE_AS_MAIN
 
-    TestProgram.USAGE = USAGE_AS_MAIN
+    # Check if python version >= 3.4
+    if sys.hexversion >= 0x030400F0:
+        from unittest.main import main
+    else:
+        from unittest.main import main, TestProgram, USAGE_AS_MAIN
+        TestProgram.USAGE = USAGE_AS_MAIN
+
     main(module=None)
 
 if __name__ == "__main__":
