@@ -2,51 +2,52 @@
 
 Colorful and clean output to python unittest.
 
-## Example
 
-### Colorful and beautiful terminal output!
+
+Colorful and beautiful terminal output!
 
 ![Example terminal output](images/example.png)
 
-### Simple test source file:
+Simple test source file:
 
-    import flossytest as unittest
+```python
+import flossytest as unittest
 
-    class CoffeMachine(unittest.TestCase):
-        """A good coffee machine"""
+class CoffeMachine(unittest.TestCase):
+    """A good coffee machine"""
 
-        def test_success(self):
-            """should makes hot drinks"""
+    def test_success(self):
+        """should makes hot drinks"""
 
-    class Dog(unittest.TestCase):
-        """A typical dog"""
+class Dog(unittest.TestCase):
+    """A typical dog"""
 
-        def test_barking(self):
-            """should barks loudly"""
-        def test_tail(self):
-            """has a tail"""
-            self.assertTrue(False)
+    def test_barking(self):
+        """should barks loudly"""
+    def test_tail(self):
+        """has a tail"""
+        self.assertTrue(False)
 
-    class Cat(unittest.TestCase):
-        """A typical cat"""
+class Cat(unittest.TestCase):
+    """A typical cat"""
 
-        def test_meow(self):
-            """can meow"""
-            print('an onomatopoeia for the voiced sound')
-        def test_fur(self):
-            """has a fur"""
+    def test_meow(self):
+        """can meow"""
+        print('an onomatopoeia for the voiced sound')
+    def test_fur(self):
+        """has a fur"""
 
-    if __name__ == "__main__":
-        unittest.main()
+if __name__ == "__main__":
+    unittest.main()
+```
 
+## Installation
 
-## Supported python
+Supported python versions:
 
     3.2
     3.3
     3.4
-
-## Installation
 
 Download `flossytest.py` script and it is ready to work. No requirements.
 
