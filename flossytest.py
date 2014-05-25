@@ -1,5 +1,7 @@
 """
 flosstest - colorful and clean output to python unittest.
+
+TODO: Option to disable colors in output.
 """
 
 from __future__ import print_function
@@ -14,6 +16,8 @@ from unittest import *
 from unittest import result
 from unittest import runner
 from unittest.signals import registerResult
+
+__version__ = '0.9.0'
 
 
 # Configuration
@@ -480,7 +484,7 @@ def run():
         sys.argv[0] = "python -m unittest"
     __unittest = True
 
-    # Check if python version >= 3.4
+    # Support for python version >= 3.4
     if sys.hexversion >= 0x030400F0:
         from unittest.main import main
     else:
