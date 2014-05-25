@@ -1,6 +1,6 @@
 # flossytest
 
-Colorful and beautiful terminal output inspired by [Vows](http://vowsjs.org/)!
+Colorful and beautiful terminal output of python unittest, inspired by [Vows](http://vowsjs.org/)!
 
 ![Example terminal output](images/example.png)
 
@@ -45,7 +45,7 @@ Supported python versions:
     3.3
     3.4
 
-Download `flossytest.py` script and it is ready to work. No requirements.
+Download [`flossytest.py`](https://github.com/lecnim/flossytest/releases/download/v0.9.0/flossytest.py) script and it is ready to work. No requirements.
 
 ## Usage
 
