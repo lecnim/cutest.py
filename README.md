@@ -1,14 +1,10 @@
 # flossytest
 
-Colorful and clean output to python unittest.
-
-
-
-Colorful and beautiful terminal output!
+Colorful and beautiful terminal output inspired by [Vows](http://vowsjs.org/)!
 
 ![Example terminal output](images/example.png)
 
-Simple test source file:
+Simple test source file powered by docstrings:
 
 ```python
 import flossytest as unittest
@@ -55,28 +51,36 @@ Download `flossytest.py` script and it is ready to work. No requirements.
 
 Import and use it just like `unittest` package:
 
-    import flossytest as unittest
+```python
+import flossytest as unittest
+```
 
 Or run and it will auto-discover available tests:
 
-    $ python flossytest.py
+```shell
+$ python flossytest.py
+```
 
 You can also test given file or package:
 
-    $ python flossytest.py my_test.py
-
+```shell
+$ python flossytest.py my_test.py
+```
 
 ## Verbose and minimal mode
 
 Standard minimalistic mode:
 
-    python flossytest.py
+```shell
+python flossytest.py
+```
 
 ![Minimalistic mode](images/minimal_success.png)
 
 Verbose mode:
 
-    python flossytest.py -v
-
+```shell
+python flossytest.py -v
+```
 
 ![Verbose mode](images/verbose_success.png)
