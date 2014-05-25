@@ -51,36 +51,26 @@ Download `flossytest.py` script and it is ready to work. No requirements.
 
 Import and use it just like `unittest` package:
 
-```python
-import flossytest as unittest
-```
+    import flossytest as unittest
 
 Or run and it will auto-discover available tests:
 
-```shell
-$ python flossytest.py
-```
+    $ python flossytest.py
 
 You can also test given file or package:
 
-```shell
-$ python flossytest.py my_test.py
-```
+    $ python flossytest.py my_test.py
 
 ## Verbose and minimal mode
 
 Standard minimalistic mode:
 
-```shell
-python flossytest.py
-```
+    $ python flossytest.py
 
 ![Minimalistic mode](images/minimal_success.png)
 
 Verbose mode:
 
-```shell
-python flossytest.py -v
-```
+    $ python flossytest.py -v
 
 ![Verbose mode](images/verbose_success.png)
