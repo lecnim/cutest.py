@@ -1,5 +1,5 @@
 """
-flosstest - colorful and clean output to python unittest.
+cutest.py - colorful and clean output to python unittest.
 
 TODO: Option to disable colors in output.
 """

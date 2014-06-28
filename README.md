@@ -1,6 +1,6 @@
-# flossytest
+# cutest.py
 
-Colorful and beautiful terminal output of python unittest, inspired by [Vows](http://vowsjs.org/)!
+The colorful and beautiful terminal output of python unittest, inspired by [Vows](http://vowsjs.org/)!
 
 ![Example terminal output](images/example.png)
 
@@ -45,32 +45,32 @@ Supported python versions:
     3.3
     3.4
 
-Download [`flossytest.py`](https://github.com/lecnim/flossytest/releases/download/v0.9.0/flossytest.py) script and it is ready to work. No requirements.
+Download a [`cutest.py`](https://github.com/lecnim/cutest/releases/download/v0.9.0/cutest.py) script and it is ready to work. No requirements.
 
 ## Usage
 
 Import and use it just like `unittest` package:
 
-    import flossytest as unittest
+    import cutest as unittest
 
 Or run and it will auto-discover available tests:
 
-    $ python flossytest.py
+    $ python cutest.py
 
 You can also test given file or package:
 
-    $ python flossytest.py my_test.py
+    $ python cutest.py my_test.py
 
 ## Verbose and minimal mode
 
 Standard minimalistic mode:
 
-    $ python flossytest.py
+    $ python cutest.py
 
 ![Minimalistic mode](images/minimal_success.png)
 
 Verbose mode:
 
-    $ python flossytest.py -v
+    $ python cutest.py -v
 
 ![Verbose mode](images/verbose_success.png)
