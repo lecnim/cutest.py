@@ -45,7 +45,11 @@ Supported python versions:
     3.3
     3.4
 
-Download a [`cutest.py`](https://github.com/lecnim/cutest/releases/download/v0.9.0/cutest.py) script and it is ready to work. No requirements.
+Use pip to install...
+
+    $ pip install cutest.py
+    
+...or download a [`cutest.py`](https://github.com/lecnim/cutest/releases/download/v0.9.0/cutest.py) script and it is ready to work. No requirements!
 
 ## Usage
 
