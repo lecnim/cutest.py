@@ -7,7 +7,7 @@ The colorful and beautiful terminal output of python unittest, inspired by [Vows
 Simple test source file powered by docstrings:
 
 ```python
-import flossytest as unittest
+import cutest as unittest
 
 class CoffeMachine(unittest.TestCase):
     """A good coffee machine"""
@@ -49,7 +49,7 @@ Use pip to install...
 
     $ pip install cutest.py
     
-...or download a [`cutest.py`](https://github.com/lecnim/cutest/releases/download/v0.9.0/cutest.py) script and it is ready to work. No requirements!
+...or download a [`cutest.py`](https://github.com/lecnim/cutest.py/releases/download/v0.9.0/cutest.py) script and it is ready to work. No requirements!
 
 ## Usage
 

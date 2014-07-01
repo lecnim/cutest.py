@@ -11,7 +11,7 @@ Simple test source file powered by docstrings:
 
 .. code:: python
 
-    import flossytest as unittest
+    import cutest as unittest
 
     class CoffeMachine(unittest.TestCase):
         """A good coffee machine"""
