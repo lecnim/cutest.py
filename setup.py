@@ -103,5 +103,14 @@ setup(
     url='https://github.com/lecnim/cutest.py',
     license='LICENSE',
     description='The colorful and beautiful terminal output of python unittest.',
-    long_description=doc
+    long_description=doc,
+    classifiers=[
+        'Environment :: Console',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Topic :: Software Development :: Testing',
+        'Topic :: Utilities'
+    ]
 )
